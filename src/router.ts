@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { ItemController } from "./controller";
-import { JsonRepository } from "./repository";
+import { Controller } from "./controller/controller";
+import { Service } from "./service/service";
 
-const repo = new JsonRepository();
-const controller = new ItemController(repo);
+const repo = new Service();
+const controller = new Controller(repo);
 const router = Router();
 
 router.get("/", controller.getAll);

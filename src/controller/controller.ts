@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { JsonRepository } from "./repository";
-import { Item } from "./types";
+import {  Service } from "../service/service";
+import { Item } from "../types/types";
 
-export class ItemController {
-  private repo: JsonRepository;
+export class Controller {
+  private repo: Service;
 
-  constructor(repo: JsonRepository) {
+  constructor(repo: Service) {
     this.repo = repo;
   }
 
