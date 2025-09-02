@@ -2,12 +2,17 @@ import fs from "fs/promises";
 import path from "path";
 import { Item, Repository } from "../types/types";
 
-const DATA_FILE = path.join(__dirname, "data.json");
 
 export class Service implements Repository<Item> {
+
+  private DATA_FILE: string;
+
+  constructor(filePath = path.join(__dirname, "data.json")) {
+    this.DATA_FILE = filePath;
+  }
   private async load(): Promise<Item[]> {
     try {
-      const raw = await fs.readFile(DATA_FILE, "utf-8");
+      const raw = await fs.readFile(this.DATA_FILE, "utf-8");
       return JSON.parse(raw);
     } catch {
       return [];
@@ -15,7 +20,7 @@ export class Service implements Repository<Item> {
   }
 
   private async save(data: Item[]): Promise<void> {
-    await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2));
+    await fs.writeFile(this.DATA_FILE, JSON.stringify(data, null, 2));
   }
 
   async getAll(): Promise<Item[]> {

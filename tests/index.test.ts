@@ -1,47 +1,49 @@
-import { Allocator } from "../src/allocator";
-import { Floor, Car, SpotSize, VehicleKind } from "../src/types/types";
+import { Item } from "../src/types/types";
+import fs from "fs/promises";
+import path from "path";
+import { Service } from "../src/service/service";
 
-let allocator: Allocator;
+let service: Service;
+let createdId: string; 
+const DATA_FILE = path.join(__dirname, "testData.json");
 
-beforeEach(() => {
-  const floors: Floor[] = [
-    {
-      id: "f1",
-      spots: [
-        { id: "s1", size: SpotSize.MOTORCYCLE },
-        { id: "s2", size: SpotSize.COMPACT },
-        { id: "s3", size: SpotSize.LARGE },
-      ],
-    },
-    {
-      id: "f2",
-      spots: [
-        { id: "s4", size: SpotSize.COMPACT },
-        { id: "s5", size: SpotSize.LARGE },
-      ],
-    },
-  ];
-  allocator = new Allocator(floors);
+beforeAll(async () => {
+
+  await fs.writeFile(DATA_FILE, "[]", "utf-8");
+  service = new Service(DATA_FILE);
 });
 
-it("allocates a Car correctly", () => {
-  const car: Car = { CarId: "car1", kind: VehicleKind.CAR };
-  const r = allocator.allocate(car);
-  expect(r).not.toBeNull();
-  expect(["s2", "s3"].includes(r!.spotId)).toBe(true);
-});
+describe("Full CRUD flow on the same item", () => {
+  it("creates a new item", async () => {
+    const created = await service.create({ name: "Test Item", description: "Hello" });
+    expect(created.id).toBeDefined();
+    expect(created.name).toBe("Test Item");
 
-it("fails to allocate Van if no LARGE spot left", () => {
-  allocator.allocate({ CarId: "v1", kind: VehicleKind.VAN });
-  allocator.allocate({ CarId: "v2", kind: VehicleKind.VAN });
-  const r3 = allocator.allocate({ CarId: "v3", kind: VehicleKind.VAN });
-  expect(r3).toBeNull();
-});
+    createdId = created.id; 
 
-it("updates stats on allocate & release", () => {
-  const car: Car = { CarId: "car1", kind: VehicleKind.CAR };
-  // allocator.allocate(car);
-  // expect(allocator.stats().usedByKind[VehicleKind.CAR]).toBe(1);
-  allocator.release(car.CarId ,);
-  expect(allocator.stats().usedByKind[VehicleKind.CAR]).toBe(0);
+    const fetched = await service.getById(createdId);
+    expect(fetched).not.toBeNull();
+    expect(fetched!.description).toBe("Hello");
+  });
+
+  it("updates the same item", async () => {
+    const updated = await service.update(createdId, { name: "Updated Name" });
+    expect(updated).not.toBeNull();
+    expect(updated!.name).toBe("Updated Name");
+
+    const fetched = await service.getById(createdId);
+    expect(fetched).not.toBeNull();
+    expect(fetched!.name).toBe("Updated Name");
+  });
+
+  it("deletes the same item", async () => {
+    const success = await service.delete(createdId);
+    expect(success).toBe(true);
+
+    const afterDelete = await service.getById(createdId);
+    expect(afterDelete).toBeNull();
+
+    const all = await service.getAll();
+    expect(all.length).toBe(0);
+  });
 });
