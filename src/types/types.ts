@@ -14,4 +14,5 @@ export interface Repository<T> {
   getBookByName(name: string): Promise<T[] | null | string>;
   borrow(bookID: string): Promise<T | null | string>;
   returnBook(bookID: string): Promise<T | null | string>;
+  // getAll(): Promise<ReadonlyArray<T[]>>;
 }

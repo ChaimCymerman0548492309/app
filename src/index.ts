@@ -16,7 +16,7 @@ app.listen(port, () => {
 
 function showMenu() {
   process.stdout.write(
-    "\n Enter input: 1 for search book, 2 for borrow a book by bookID, 3 to return book by bookID,\n> "
+    "\n Enter input:\n * 1 for search book,\n * 2 for borrow a book by bookID,\n * 3 to return book by bookID,\n> "
   );
 
   process.stdin.once("data", async (data) => {
@@ -34,7 +34,7 @@ function showMenu() {
           } else {
             result.forEach((book: Book) => {
               console.log(
-                `book name : ${book.name} outhor : ${book.outhor} Status: ${book.bookStatus}`
+                `bookID is : ${book.bookId}, \n book name : ${book.name} \n outhor : ${book.outhor}, \n Status: ${book.bookStatus}`
               );
             });
           }

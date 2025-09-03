@@ -35,17 +35,19 @@ export class Service implements Repository<Book> {
     const data = await this.load();
     const books: Book[] = [];
     data.forEach((b) => {
-      if (b.name === name) {
+      if (b.name === name || b.outhor === name || b.year === Number(name)) {
         books.push(b);
       }
     });
+
+       
     return books;
   }
 
   async borrow(bookID: string): Promise<Book | null | string> {
     const loaded = await this.load();
     const all = [...loaded];
-    const index = all.findIndex((i) => i.bookId === bookID);
+    const index = all.findIndex((i) => i.bookId === bookID );
     if (index === -1 ) {
       console.log("Book not found");
       return null;
