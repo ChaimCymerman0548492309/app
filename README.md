@@ -1,12 +1,12 @@
-מ
+<!-- מ
 ---
 
 # 📦 Service – JSON Repository
 
-## Overview
+## Overview -->
 
-This project provides a simple **CRUD service** that handles `Item` objects saved in a JSON file.
-It's a super light replacement for a database, good for testing, small prototypes, or simple apps.
+<!-- This project provides a simple **CRUD service** that handles `Item` objects saved in a JSON file.
+It's a super light replacement for a database, good for testing, small prototypes, or simple apps. -->
 
 ---
 
@@ -26,20 +26,22 @@ npm run dev
 ## 🗂️ **Types**
 
 ```ts
-Item {
-  id: string;
+export interface Book {
+  readonly bookId: string;
   name: string;
-  description?: string;
-  createdAt: string;
-  updatedAt: string;
+  year: number;
+  outhor: string;
+  description: string;
+  readonly createdAt: string;
+  borrowesAt: Date | null;
+  maxBorrowDays: number | null;
+  bookStatus: "available" | "on-lone" | "reserved" | "lost/damaged";
 }
 
-Repository<T> {
-  getAll(): Promise<T[]>;
-  getById(id: string): Promise<T | null>;
-  create(data: Partial<T>): Promise<T>;
-  update(id: string, data: Partial<T>): Promise<T | null>;
-  delete(id: string): Promise<boolean>;
+export interface Repository<T> {
+  getBookByName(name: string): Promise<T[] | null | string>;
+  borrow(bookID: string): Promise<T | null | string>;
+  returnBook(bookID: string): Promise<T | null | string>;
 }
 ```
 
@@ -47,13 +49,12 @@ Repository<T> {
 
 ## **API (Service Methods)**
 
-| Method             | Params                      | Response       | Description           |
+| Method             | Params                      | Response       |            |
 | ------------------ | --------------------------- | -------------- | --------------------- |
-| `getAll()`         | –                           | `Item[]`       | Return all items      |
-| `getById(id)`      | `id: string`                | `Item \| null` | Return one item by ID |
-| `create(data)`     | `Partial<Item>`             | `Item`         | Add new item          |
-| `update(id, data)` | `id: string, Partial<Item>` | `Item \| null` | Update an item        |
-| `delete(id)`       | `id: string`                | `boolean`      | Delete item by ID     |
+| `getBookByName()`         |            `name: string`               | `Book[]`       |       |
+| `borrow(bookID)`      | `bookID: string`                | `Book ` |  |
+| `returnBook(bookID)`     | `bookID: string`             | `Book`         |          |
+
 
 ---
 
@@ -71,14 +72,13 @@ All data is stored in a local JSON file:
 
 | Method / Action       | Behavior / Response                                          |
 | --------------------- | ------------------------------------------------------------ |
-| `getById`             | Returns `null` if the ID does not exist                      |
-| `update`              | Returns `null` if trying to update a non-existent item       |
-| `delete`              | Returns `false` if the item does not exist                   |
-| All controller routes | Catch errors and return **HTTP 500** with `{ error: "..." }` |
+| `getBookByName`             | "No books found with that name."                      |
+| `/borrow/:bookID`              | is already on-lone      |
+| `/return/:bookID`              | is already availablet                   |
 
 ---
 
-## **Tests / Example Usage**
+<!-- ## **Tests / Example Usage**
 
 | Action | Input                                  | Expected Result                         |
 | ------ | -------------------------------------- | --------------------------------------- |
@@ -87,14 +87,14 @@ All data is stored in a local JSON file:
 | Update | `id, { name: "Updated" }`              | Returns updated `Item`                  |
 | Delete | `id`                                   | Returns `true` if deleted, else false   |
 
----
+--- -->
 
-## **High-Level Design (HLD)**
+<!-- ## **High-Level Design (HLD)**
 
 You can check the overall architecture here:
 [HLD Diagram](https://www.diagrams.net/) *(replace with your actual diagram file or link)*
 
----
+--- -->
 
 <!-- ## Notes  
 

@@ -6,10 +6,10 @@ const repo = new Service();
 const controller = new Controller(repo);
 const router = Router();
 
-router.get("/", controller.getAll);
-router.get("/:id", controller.getById);
-router.post("/", controller.create);
-router.put("/:id", controller.update);
-router.delete("/:id", controller.delete);
+router.get("/:bookByNAme", controller.getBookByName);
+router.post("/borrow/:bookID", controller.borrow);
+router.post("/return/:bookID", controller.returnBook);
+// router.get("/", controller.getAll);
+
 
 export default router;

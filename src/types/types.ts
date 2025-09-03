@@ -1,25 +1,17 @@
-
-export interface Item {
-  readonly id: string;            
+export interface Book {
+  readonly bookId: string;
   name: string;
-  description: string;             
-  readonly createdAt: string;       
-  updatedAt: string;
+  year: number;
+  outhor: string;
+  description: string;
+  readonly createdAt: string;
+  borrowesAt: Date | null;
+  maxBorrowDays: number | null;
+  bookStatus: "available" | "on-lone" | "reserved" | "lost/damaged";
 }
 
-
-export type CreateItemDTO = {
-  name?: string;                   
-  description?: string;             
-};
-
-export type UpdateItemDTO = Partial<Pick<Item, "name" | "description">>;  
-
-
 export interface Repository<T> {
-  getAll(): Promise<ReadonlyArray<T>>;             
-  getById(id: string): Promise<T | null>;
-  create(data: CreateItemDTO): Promise<T>;
-  update(id: string, data: UpdateItemDTO): Promise<T | null>;
-  delete(id: string): Promise<boolean>;
+  getBookByName(name: string): Promise<T[] | null | string>;
+  borrow(bookID: string): Promise<T | null | string>;
+  returnBook(bookID: string): Promise<T | null | string>;
 }

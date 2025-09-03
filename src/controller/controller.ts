@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { Service } from "../service/service";
-import { CreateItemDTO, UpdateItemDTO, Item } from "../types/types";
 
 export class Controller {
   private repo: Service;
@@ -9,58 +8,44 @@ export class Controller {
     this.repo = repo;
   }
 
-  getAll = async (req: Request, res: Response) => {
+  // getAll = async (req: Request, res: Response) => {
+  //   try {
+  //     const items = await this.repo.getAll();
+  //     res.json(items);
+  //   } catch (err) {
+  //     console.error("getAll error:", err);
+  //     res.status(500).json({ error: "Failed to load items" });
+  //   }
+  // };
+
+  getBookByName = async (req: Request, res: Response) => {
     try {
-      const items = await this.repo.getAll();
-      res.json(items);
+      const book = await this.repo.getBookByName(req.params.bookByNAme);
+      if (!book) return res.status(404).json({ error: "book not found" });
+      res.json(book);
     } catch (err) {
-      console.error("getAll error:", err);
-      res.status(500).json({ error: "Failed to load items" });
+      console.error("getBookByNAme error:", err);
+      res.status(500).json({ error: "Failed to load books from DB" });
     }
   };
 
-  getById = async (req: Request, res: Response) => {
+  borrow = async (req: Request, res: Response) => {
     try {
-      const item = await this.repo.getById(req.params.id);
-      if (!item) return res.status(404).json({ error: "Item not found" });
-      res.json(item);
-    } catch (err) {
-      console.error("getById error:", err);
-      res.status(500).json({ error: "Failed to load item" });
-    }
-  };
-
-  create = async (req: Request, res: Response) => {
-    try {
-      const dto: CreateItemDTO = req.body;
-      const newItem = await this.repo.create(dto);
-      res.status(201).json(newItem);
+      const book = await this.repo.borrow(req.params.bookID);
+      if (!book) return res.status(404).json({ error: "book not found or it is already on-lone" });
+    res.status(201).json(`book is borrowed successfully`);
     } catch (err) {
       console.error("create error:", err);
-      res.status(500).json({ error: "Failed to create item" });
+      res.status(500).json({ error: "Failed to borrow book" });
     }
   };
-
-  update = async (req: Request, res: Response) => {
+returnBook = async (req: Request, res: Response) => {
     try {
-      const dto: UpdateItemDTO = req.body;
-      const updated = await this.repo.update(req.params.id, dto);
-      if (!updated) return res.status(404).json({ error: "Item not found" });
-      res.json(updated);
+      const book = await this.repo.returnBook(req.params.bookID);
+      res.status(201).json(`${book?.name} of the outhor ${book?.outhor} returned successfully`);
     } catch (err) {
-      console.error("update error:", err);
-      res.status(500).json({ error: "Failed to update item" });
-    }
-  };
-
-  delete = async (req: Request, res: Response) => {
-    try {
-      const ok = await this.repo.delete(req.params.id);
-      if (!ok) return res.status(404).json({ error: "Item not found" });
-      res.json({ status: "ok" });
-    } catch (err) {
-      console.error("delete error:", err);
-      res.status(500).json({ error: "Failed to delete item" });
+      console.error("create error:", err);
+      res.status(500).json({ error: "Failed to return book" });
     }
   };
 }

@@ -1,16 +1,24 @@
 [
   {
-    "id": "1756214945709",
-    "name": "Laptop",
-    "description": "Dell XPS 13",
-    "createdAt": "2025-08-26T13:29:05.709Z",
-    "updatedAt": "2025-08-26T13:29:05.710Z"
+    "bookId": "1",
+    "name": "Book",
+    "year": 2020,
+    "outhor": " A",
+    "description": "One",
+    "createdAt": "2023",
+    "borrowesAt": null,
+    "maxBorrowDays": 30,
+    "bookStatus": "available"
   },
   {
-    "id": "1756215106113",
-    "name": "Phone",
-    "description": "iPhone 16 Pro",
-    "createdAt": "2025-08-26T13:31:46.113Z",
-    "updatedAt": "2025-08-26T13:31:46.113Z"
+    "bookId": "2",
+    "name": "Book2",
+    "year": 2021,
+    "outhor": " B",
+    "description": " Two",
+    "createdAt": "2023",
+    "borrowesAt": null,
+    "maxBorrowDays": 14,
+    "bookStatus": "available"
   }
 ]
